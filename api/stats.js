@@ -15,8 +15,10 @@ export default async function handler(req, res) {
 
     try {
       const response = await fetch(url);
-      const json = await response.json();
+      const text = await response.text();
+      const json = JSON.parse(text);
       const stats = json.query.statistics;
+
       return {
         site,
         pages: stats.pages || 0,
@@ -27,8 +29,19 @@ export default async function handler(req, res) {
         activeUsers: stats.activeusers || 0,
         admins: stats.admins || 0
       };
-    } catch (error) {
-      return { site, error: error.message };
+
+    } catch {
+      return {
+        site,
+        pages: "הטעינה לא הצליחה",
+        articles: "הטעינה לא הצליחה",
+        edits: "הטעינה לא הצליחה",
+        files: "הטעינה לא הצליחה",
+        users: "הטעינה לא הצליחה",
+        activeUsers: "הטעינה לא הצליחה",
+        admins: "הטעינה לא הצליחה"
+      };
+
     }
   };
 
