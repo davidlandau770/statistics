@@ -11,8 +11,13 @@ export default async function handler(req, res) {
   ];
 
   const fetchStats = async (site) => {
+    const url = `https://${site}/api.php?action=query&meta=siteinfo&siprop=statistics&format=json`
+
     try {
-      const response = await fetch(`https://${site}/api.php?action=query&meta=siteinfo&siprop=statistics&format=json`);
+      const response = await fetch(url);
+      console.log("requested:", url);
+      console.log("final:", response.url);
+      console.log("status:", response.status);
       const json = await response.json();
       const stats = json.query.statistics;
       return {
