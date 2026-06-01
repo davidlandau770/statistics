@@ -14,10 +14,19 @@ export default async function handler(req, res) {
     const url = `https://${site}/api.php?action=query&meta=siteinfo&siprop=statistics&format=json`
 
     try {
-      const response = await fetch(url);
+      const response = await fetch(url, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0'
+        }
+      });
       console.log("requested:", url);
       console.log("final:", response.url);
       console.log("status:", response.status);
+      console.log(
+        "content-type:",
+        response.headers.get("content-type")
+      );
+
       const json = await response.json();
       const stats = json.query.statistics;
       return {
