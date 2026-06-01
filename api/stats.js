@@ -14,28 +14,18 @@ export default async function handler(req, res) {
     const url = `https://${site}/api.php?action=query&meta=siteinfo&siprop=statistics&format=json`
 
     try {
-      const response = await fetch(url, {
-        headers: {
-          'User-Agent': 'Mozilla/5.0'
-        }
-      });
-
-      console.log("requested:", url);
-      console.log("final:", response.url);
-      console.log("status:", response.status);
-      console.log(
-        "content-type:",
-        response.headers.get("content-type")
-      );
-
-      const text = await response.text();
-
-      console.log("body:");
-      console.log(text.substring(0, 1000));
-
+      const response = await fetch(url);
+      const json = await response.json();
+      const stats = json.query.statistics;
       return {
         site,
-        status: response.status
+        pages: stats.pages || 0,
+        articles: stats.articles || 0,
+        edits: stats.edits || 0,
+        files: stats.images || 0,
+        users: stats.users || 0,
+        activeUsers: stats.activeusers || 0,
+        admins: stats.admins || 0
       };
     } catch (error) {
       return { site, error: error.message };
