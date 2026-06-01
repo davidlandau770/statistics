@@ -19,6 +19,7 @@ export default async function handler(req, res) {
           'User-Agent': 'Mozilla/5.0'
         }
       });
+
       console.log("requested:", url);
       console.log("final:", response.url);
       console.log("status:", response.status);
@@ -27,17 +28,14 @@ export default async function handler(req, res) {
         response.headers.get("content-type")
       );
 
-      const json = await response.json();
-      const stats = json.query.statistics;
+      const text = await response.text();
+
+      console.log("body:");
+      console.log(text.substring(0, 1000));
+
       return {
         site,
-        pages: stats.pages || 0,
-        articles: stats.articles || 0,
-        edits: stats.edits || 0,
-        files: stats.images || 0,
-        users: stats.users || 0,
-        activeUsers: stats.activeusers || 0,
-        admins: stats.admins || 0
+        status: response.status
       };
     } catch (error) {
       return { site, error: error.message };
